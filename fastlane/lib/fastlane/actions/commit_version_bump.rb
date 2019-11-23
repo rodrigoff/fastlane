@@ -82,8 +82,8 @@ module Fastlane
 
         # create our list of files that we expect to have changed, they should all be relative to the project root, which should be equal to the git workdir root
         expected_changed_files = extra_files
-        expected_changed_files << pbxproj_path
         expected_changed_files << info_plist_files
+        expected_changed_files << pbxproj_path if !params[:ignore_pbxproj]
 
         if params[:settings]
           settings_plists_from_param(params[:settings]).each do |file|
@@ -178,6 +178,12 @@ module Fastlane
                                        optional: true,
                                        default_value: nil,
                                        is_string: false),
+          FastlaneCore::ConfigItem.new(key: :ignore_pbxproj,
+                                       description: "Excludes the .xcodeproj/project.pbxproj file from the commit",
+                                       type: Boolean,
+                                       optional: true,
+                                       default_value: false,
+                                       is_string: false)
           FastlaneCore::ConfigItem.new(key: :include,
                                        description: "A list of extra files to be included in the version bump (string array or comma-separated string)",
                                        optional: true,
